@@ -2,18 +2,35 @@
 
 import turtle
 
-#Screen setup
 screen = turtle.Screen()
-screen.setup(width=800, height=600)
-screen.title("Game of life")
+screen.setup(800, 600)
 screen.bgcolor("black")
-screen.tracer(0)
 
-cell = turtle.Turtle()
-#cell.shape("square")
-cell.color("white")
-#cell.shapesize(stretch_wid=5, stretch_len=5)
+"""
+Screen size: 800x600
 
+(0,600)--------------(800,600)
+  |                      |
+  |                      |
+  |       SCREEN         |
+  |                      |
+  |                      |
+(0,0)----------------(800,0)
+"""
+screen.setworldcoordinates(0,0,800,400)
+
+c = turtle.Turtle()
+c.shape("square")
+c.color("white")
+
+c1 = turtle.Turtle()
+c1.shape("square")
+c1.color("white")
+c1.penup()
+c1.setx(23)
+c1.sety(0)
+
+screen.mainloop()
 #Initialize turtles
 """
 cells = []
