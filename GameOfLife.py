@@ -3,23 +3,31 @@
 import turtle
 import time
 
-def init_cells(screen):
+class Cell(turtle.RawTurtle):
+    def __init__(self, screen):
+        super().__init__(screen)
+        super().shape("square")
+        super().color("white")
+        super().speed(0)
+        super().penup()
+        super().shapesize(0.5)
+        super().hideturtle()
+
+        self.lives = False
+
+    def live(neighbours):
+        pass
+
+def init_cells(screen, cols, rows):
     #Initialize cells
     cells = []
     #This should be a multiple of 10
     screensize = screen.screensize()
     print(screensize)
-    for y in range(60): #Rows
+    for y in range(rows):
         holder = []
-        for x in range(80): #Cols
-            cell = turtle.RawTurtle(screen)
-            cell.shape("square")
-            cell.color("white")
-            cell.speed(0)
-            cell.penup()
-            cell.shapesize(0.5)
-            cell.hideturtle()
-            cell.lives = False
+        for x in range(cols):
+            cell = Cell(screen)
             #The x*2 is for a separation of 1px between cells.
             #This works due to the nature of the loop
             cell.goto(10*x+2*x,10*y+2*y)
@@ -55,7 +63,16 @@ The "screen" contains the "world"
 (0,0)----------------(960,0)
 """
 screen.setworldcoordinates(0,0,960,720)
+ROW_CELLS = 60
+COL_CELLS = 80
 
-cells = init_cells(screen)
+cells = init_cells(screen, ROW_CELLS, COL_CELLS)
+
+for row in range(ROW_CELLS):
+    for col in range(COL_CELLS):
+        cell = cells[row][col]
+        neighbours = [cells[row+1][col], cells[row+1][col+1], cells[row+1][col-1],
+                      cells[row][col-1],                      cells[row][col+1],
+                      cells[row-1][col], cells[row-1][col+1],cells[row-1][col-1]]
 screen.update()
 input()
