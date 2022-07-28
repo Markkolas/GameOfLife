@@ -15,8 +15,19 @@ class Cell(turtle.RawTurtle):
 
         self.lives = False
 
-    def live(neighbours):
-        pass
+    def live(self, neighbours):
+        n = 0
+        for c in neighbours:
+            if c is not None:
+                n += int(c.lives)
+
+        if self.lives == False and n == 3:
+            super().showturtle()
+            self.lives = True
+        elif self.lives == True and (n < 2 or n > 3):
+            super().hideturtle()
+            self.lives = False
+
 
 def init_cells(screen, cols, rows):
     #Initialize cells
@@ -24,14 +35,22 @@ def init_cells(screen, cols, rows):
     #This should be a multiple of 10
     screensize = screen.screensize()
     print(screensize)
+
     for y in range(rows):
         holder = []
         for x in range(cols):
-            cell = Cell(screen)
-            #The x*2 is for a separation of 1px between cells.
-            #This works due to the nature of the loop
-            cell.goto(10*x+2*x,10*y+2*y)
-            holder.append(cell)
+            if y == 0 or y == rows-1:
+                holder.append(None)
+            else:
+                if x == 0 or x == cols-1:
+                    holder.append(None)
+                else:
+                    cell = Cell(screen)
+                    #The x*2 is for a separation of 1px between cells.
+                    #The (x-1) part is because how the array is constructed.
+                    #This works due to the nature of the loop
+                    cell.goto(10*(x-1)+2*x,10*(y-1)+2*y)
+                    holder.append(cell)
         cells.append(holder)
     return cells
 
@@ -66,13 +85,39 @@ screen.setworldcoordinates(0,0,960,720)
 ROW_CELLS = 60
 COL_CELLS = 80
 
-cells = init_cells(screen, ROW_CELLS, COL_CELLS)
+"""
+This is what is done:
+cells =
+ [[],[],[]
+  [],dt,[]
+  [],[],[]]
+Makes neighbour cheking A LOT eaiser
+"""
+cells = init_cells(screen, COL_CELLS+2, ROW_CELLS+2)
 
-for row in range(ROW_CELLS):
-    for col in range(COL_CELLS):
-        cell = cells[row][col]
-        neighbours = [cells[row+1][col], cells[row+1][col+1], cells[row+1][col-1],
-                      cells[row][col-1],                      cells[row][col+1],
-                      cells[row-1][col], cells[row-1][col+1],cells[row-1][col-1]]
+cells[54][5].showturtle()
+cells[53][6].showturtle()
+cells[53][7].showturtle()
+cells[52][5].showturtle()
+cells[52][6].showturtle()
+
+cells[54][5].lives = True
+cells[53][6].lives = True
+cells[53][7].lives = True
+cells[52][5].lives = True
+cells[52][6].lives = True
+
 screen.update()
 input()
+
+while True:
+    for row in range(1, ROW_CELLS+1):
+        for col in range(1, COL_CELLS+1):
+            cell = cells[row][col]
+            neighbours = [cells[row+1][col], cells[row+1][col+1], cells[row+1][col-1],
+                          cells[row][col-1],                      cells[row][col+1],
+                          cells[row-1][col], cells[row-1][col+1], cells[row-1][col-1]]
+            cell.live(neighbours)
+    screen.update()
+    print("done!")
+    input()
