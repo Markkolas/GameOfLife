@@ -7,11 +7,11 @@ class Cell(turtle.RawTurtle):
     def __init__(self, screen):
         super().__init__(screen)
         super().shape("square")
-        super().color("white")
+        super().color("black")
         super().speed(0)
         super().penup()
         super().shapesize(0.5)
-        super().hideturtle()
+        #super().hideturtle()
 
         self.lives = False
 
@@ -35,6 +35,19 @@ class Cell(turtle.RawTurtle):
             return 0
 
         return -1
+
+    #Forced to use .color method, hide and show diable onclick methods
+    def life_or_death(self, *pos):
+        print("Here; %d,%d" %(pos[0],pos[1]))
+        if self.lives == False:
+            super().color("white")
+            self.lives = True
+        elif self.lives == True:
+            super().color("black")
+            self.lives = False
+
+        #TODO: THIS IS BAD, FIX IT
+        screen.update()
 
 def init_cells(screen, cols, rows):
     #Initialize cells
@@ -60,6 +73,12 @@ def init_cells(screen, cols, rows):
                     holder.append(cell)
         cells.append(holder)
     return cells
+
+def create_life(cells, nrow, ncol):
+    for row in range(1, nrow+1):
+        for col in range(1, ncol+1):
+            cell = cells[row][col]
+            cell.onclick(cell.life_or_death)
 
 def main():
     while True:
@@ -138,4 +157,8 @@ cells[53][7].lives = True
 cells[52][5].lives = True
 cells[52][6].lives = True
 
-main()
+create_life(cells, ROW_CELLS, COL_CELLS)
+screen.update()
+print("Ready")
+#main()
+screen.mainloop()
