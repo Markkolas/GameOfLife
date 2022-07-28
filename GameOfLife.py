@@ -15,18 +15,26 @@ class Cell(turtle.RawTurtle):
 
         self.lives = False
 
-    def live(self, neighbours):
+    def think(self, neighbours):
+        """ This is the cell choosing whether is lives or dies, 3 possible outcomes:
+         1: It is dead but wants to live
+         0: It is alive but wants to be dead
+         -1: It wants to remain the same"""
         n = 0
+        cont = 0
         for c in neighbours:
             if c is not None:
                 n += int(c.lives)
+            cont += 1
 
         if self.lives == False and n == 3:
             super().showturtle()
-            self.lives = True
+            return 1
         elif self.lives == True and (n < 2 or n > 3):
             super().hideturtle()
-            self.lives = False
+            return 0
+
+        return -1
 
 
 def init_cells(screen, cols, rows):
@@ -108,16 +116,27 @@ cells[52][5].lives = True
 cells[52][6].lives = True
 
 screen.update()
-input()
 
 while True:
+    living_ones = []
+    dead_ones = []
     for row in range(1, ROW_CELLS+1):
         for col in range(1, COL_CELLS+1):
             cell = cells[row][col]
             neighbours = [cells[row+1][col], cells[row+1][col+1], cells[row+1][col-1],
                           cells[row][col-1],                      cells[row][col+1],
                           cells[row-1][col], cells[row-1][col+1], cells[row-1][col-1]]
-            cell.live(neighbours)
+            state = cell.think(neighbours)
+            if state == 1:
+                living_ones.append([row, col])
+            elif state == 0:
+                dead_ones.append([row,col])
+
+    for row, col in living_ones:
+        cells[row][col].lives = True
+    for row, col in dead_ones:
+        cells[row][col].lives = False
+
+
     screen.update()
-    print("done!")
-    input()
+    time.sleep(0.2)
