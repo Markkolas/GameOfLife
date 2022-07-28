@@ -36,7 +36,6 @@ class Cell(turtle.RawTurtle):
 
         return -1
 
-
 def init_cells(screen, cols, rows):
     #Initialize cells
     cells = []
@@ -62,6 +61,30 @@ def init_cells(screen, cols, rows):
         cells.append(holder)
     return cells
 
+def main():
+    while True:
+        living_ones = []
+        dead_ones = []
+        for row in range(1, ROW_CELLS+1):
+            for col in range(1, COL_CELLS+1):
+                cell = cells[row][col]
+                neighbours = [cells[row+1][col], cells[row+1][col+1], cells[row+1][col-1],
+                              cells[row][col-1],                      cells[row][col+1],
+                              cells[row-1][col], cells[row-1][col+1], cells[row-1][col-1]]
+                state = cell.think(neighbours)
+                if state == 1:
+                    living_ones.append([row, col])
+                elif state == 0:
+                    dead_ones.append([row,col])
+
+        for row, col in living_ones:
+            cells[row][col].lives = True
+        for row, col in dead_ones:
+            cells[row][col].lives = False
+
+
+        screen.update()
+        time.sleep(0.2)
 
 screen = turtle.Screen()
 screen.setup(980, 740)
@@ -115,28 +138,4 @@ cells[53][7].lives = True
 cells[52][5].lives = True
 cells[52][6].lives = True
 
-screen.update()
-
-while True:
-    living_ones = []
-    dead_ones = []
-    for row in range(1, ROW_CELLS+1):
-        for col in range(1, COL_CELLS+1):
-            cell = cells[row][col]
-            neighbours = [cells[row+1][col], cells[row+1][col+1], cells[row+1][col-1],
-                          cells[row][col-1],                      cells[row][col+1],
-                          cells[row-1][col], cells[row-1][col+1], cells[row-1][col-1]]
-            state = cell.think(neighbours)
-            if state == 1:
-                living_ones.append([row, col])
-            elif state == 0:
-                dead_ones.append([row,col])
-
-    for row, col in living_ones:
-        cells[row][col].lives = True
-    for row, col in dead_ones:
-        cells[row][col].lives = False
-
-
-    screen.update()
-    time.sleep(0.2)
+main()
