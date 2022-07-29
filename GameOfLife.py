@@ -7,7 +7,6 @@ class Cell(turtle.RawTurtle):
     def __init__(self, screen):
         super().__init__(screen)
         super().shape("square")
-        super().color("black")
         super().speed(0)
         super().penup()
         super().shapesize(0.5)
@@ -38,10 +37,10 @@ class Cell(turtle.RawTurtle):
     def life_or_death(self, *pos):
         print("Here; %d,%d" %(pos[0],pos[1]))
         if self.lives == False:
-            super().color("white")
+            super().color("green")
             self.lives = True
         elif self.lives == True:
-            super().color("black")
+            super().color("blue")
             self.lives = False
 
     def check(self, *pos):
@@ -79,13 +78,13 @@ def create_life(cells, nrow, ncol):
     for row in range(1, nrow+1):
         for col in range(1, ncol+1):
             cell = cells[row][col]
+            cell.color("blue")
             cell.onclick(cell.life_or_death)
 
 def life_created(cells, nrow, ncol):
     for row in range(1, nrow+1):
         for col in range(1, ncol+1):
             cell = cells[row][col]
-            #cell.onclick(cell.check)
             cell.color("white")
             if cell.lives:
                 cell.showturtle()
@@ -128,6 +127,7 @@ def main():
 
 def finish_setup():
     screen.tracer(0,0)
+    screen.bgcolor("black")
     screen.onkeypress("None", "space")
     life_created(cells, ROW_CELLS, COL_CELLS)
     main()
