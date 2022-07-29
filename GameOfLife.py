@@ -46,8 +46,11 @@ class Cell(turtle.RawTurtle):
             super().color("black")
             self.lives = False
 
-        #TODO: THIS IS BAD, FIX IT
-        screen.update()
+    def check(self, *pos):
+        if self.lives == True:
+            print("Im alive!")
+        else:
+            print("Im dead!")
 
 def init_cells(screen, cols, rows):
     #Initialize cells
@@ -80,6 +83,16 @@ def create_life(cells, nrow, ncol):
             cell = cells[row][col]
             cell.onclick(cell.life_or_death)
 
+def life_created(cells, nrow, ncol):
+    for row in range(1, nrow+1):
+        for col in range(1, ncol+1):
+            cell = cells[row][col]
+            #cell.onclick(cell.check)
+            cell.color("white")
+            if cell.lives:
+                cell.showturtle()
+            else:
+                cell.hideturtle()
 def main():
     while True:
         living_ones = []
@@ -101,9 +114,16 @@ def main():
         for row, col in dead_ones:
             cells[row][col].lives = False
 
-
         screen.update()
         time.sleep(0.2)
+
+def finish_setup():
+    screen.tracer(0,0)
+    screen.onkeypress("None", "space")
+    life_created(cells, ROW_CELLS, COL_CELLS)
+    main()
+
+
 
 screen = turtle.Screen()
 screen.setup(980, 740)
@@ -145,20 +165,11 @@ Makes neighbour cheking A LOT eaiser
 """
 cells = init_cells(screen, COL_CELLS+2, ROW_CELLS+2)
 
-cells[54][5].showturtle()
-cells[53][6].showturtle()
-cells[53][7].showturtle()
-cells[52][5].showturtle()
-cells[52][6].showturtle()
-
-cells[54][5].lives = True
-cells[53][6].lives = True
-cells[53][7].lives = True
-cells[52][5].lives = True
-cells[52][6].lives = True
-
 create_life(cells, ROW_CELLS, COL_CELLS)
-screen.update()
+screen.tracer(1,0)
+screen.onkeypress(finish_setup, "space")
+screen.listen()
+#screen.update()
 print("Ready")
 #main()
 screen.mainloop()
