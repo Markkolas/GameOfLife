@@ -28,10 +28,8 @@ class Cell(turtle.RawTurtle):
             cont += 1
 
         if self.lives == False and n == 3:
-            super().showturtle()
             return 1
         elif self.lives == True and (n < 2 or n > 3):
-            super().hideturtle()
             return 0
 
         return -1
@@ -111,11 +109,22 @@ def main():
 
         for row, col in living_ones:
             cells[row][col].lives = True
+            cells[row][col].showturtle()
         for row, col in dead_ones:
             cells[row][col].lives = False
+            cells[row][col].hideturtle()
 
+        #This is better compared to using the event loop.
+        #This pair of lines can became your worst nightmare in other apps.
+        #You have been advised of the danger.
+        """
+        Flow diagram:
+
+        START---USER EVENTS---USER PRESS SPACEBAR
+                                     |-------MAIN <----- Now the event loop is locked
+        """
         screen.update()
-        time.sleep(0.2)
+        time.sleep(0.1)
 
 def finish_setup():
     screen.tracer(0,0)
